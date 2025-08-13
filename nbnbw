@@ -1,0 +1,58 @@
+// app/gallery/page.tsx
+'use client'
+import { useEffect, useState } from 'react'
+
+export default function Gallery() {
+  const [images, setImages] = useState<string[]>([])
+
+  useEffect(() => {
+    async function load() {
+      const res = await fetch('/api/images')
+      const data = await res.json()
+      setImages(data)
+    }
+    load()
+  }, [])
+
+  return (
+    <main className="p-6 grid grid-cols-2 md:grid-cols-3 gap-4">
+      {images.map((url, i) => (
+        <>
+          <img key={url} src={url} className="rounded-lg shadow" />
+          {(i + 1) % 4 === 0 && (
+            <div className="col-span-full bg-neutral-200 text-center p-4">
+              {/* Custom ad content */}
+              <a href="https://your-ad-link.com" target="_blank">
+                <img src="/my-ad.jpg" alt="Ad" className="mx-auto" />
+              </a>
+            </div>
+          )}
+        </>
+      ))}
+    </main>
+  )
+}
+
+
+
+// app/api/images/route.ts
+import { NextResponse } from 'next/server'
+
+export async function GET() {
+  const imageUrls = [
+    'https://yourcdn.com/img1.jpg',
+    'https://yourcdn.com/img2.jpg',
+    'https://yourcdn.com/img3.jpg',
+    // ...
+  ]
+  return NextResponse.json(imageUrls)
+}
+
+
+[
+  { "img": "/ad1.jpg", "link": "https://link1.com" },
+  { "img": "/ad2.jpg", "link": "https://link2.com" }
+]
+
+
+
